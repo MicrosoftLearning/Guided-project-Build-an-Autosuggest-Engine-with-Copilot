@@ -30,7 +30,6 @@ public class Trie
         root = new TrieNode();
     }
 
-    // Learner will write this code
     public bool Search(string word)
     {
         TrieNode current = root;
@@ -122,7 +121,6 @@ public class Trie
         return GetAllWordsWithPrefix(root, "");
     }
 
-    // Learner will write this code
     private bool DeleteHelper(TrieNode root, string word, int index)
     {
         if (index == word.Length)
@@ -152,7 +150,6 @@ public class Trie
         return false;
     }
 
-    // Learner will write this code
     public bool Delete(string word)
     {
         return DeleteHelper(root, word, 0);
