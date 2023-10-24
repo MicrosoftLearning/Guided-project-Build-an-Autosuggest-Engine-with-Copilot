@@ -62,16 +62,7 @@ public class Trie
 
     private List<string> GetAllWordsWithPrefix(TrieNode root, string prefix)
     {
-        List<string> words = new List<string>();
-        if (root.IsEndOfWord)
-        {
-            words.Add(prefix);
-        }
-        foreach (char c in root.Children.Keys)
-        {
-            words.AddRange(GetAllWordsWithPrefix(root.Children[c], prefix + c));
-        }
-        return words;
+        return null;
     }
 
     public List<string> GetAllWords()

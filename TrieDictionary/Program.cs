@@ -36,10 +36,12 @@ void SearchWord()
         {
             break;
         }
+        /*
         if (input != null && dictionary.Search(input))
         {
             Console.WriteLine($"Found \"{input}\" in dictionary");
         }
+        */
         else
         {
             Console.WriteLine($"Did not find \"{input}\" in dictionary");
@@ -64,12 +66,14 @@ void DeleteWord()
         {
             break;
         }
+        /*
         if (input != null && dictionary.Search(input))
         {
             dictionary.Delete(input);
             Console.WriteLine($"Deleted \"{input}\" from dictionary\n");
             PrintTrie(dictionary);
         }
+        */
         else
         {
             Console.WriteLine($"Did not find \"{input}\" in dictionary");
