@@ -30,22 +30,28 @@ public class Trie
     public bool Insert(string word)
     {
         TrieNode current = root;
+        // Check if the word is empty
         foreach (char c in word)
         {
+            // If the character is not already a child, add it
             if (!current.HasChild(c))
             {
+                // Add new child node
                 current.Children[c] = new TrieNode(c);
             }
+            // Move to the child node
             current = current.Children[c];
         }
         if (current.IsEndOfWord)
         {
+            // Word already exists
             return false;
         }
+        // Mark the end of the word
         current.IsEndOfWord = true;
         return true;
     }
-    
+
     public List<string> AutoSuggest(string prefix)
     {
         TrieNode currentNode = root;
@@ -62,9 +68,57 @@ public class Trie
 
     private List<string> GetAllWordsWithPrefix(TrieNode root, string prefix)
     {
-        return null;
+        List<string> words = new List<string>();
+        if (root == null)
+            return words;
+
+        if (root.IsEndOfWord)
+        {
+            words.Add(prefix);
+        }
+
+        foreach (var child in root.Children)
+        {
+            words.AddRange(GetAllWordsWithPrefix(child.Value, prefix + child.Key));
+        }
+
+        return words;
     }
 
+    // Helper method to delete a word from the trie by recursively removing its nodes
+    private bool _delete(TrieNode root, string word, int index)
+{
+    // Base case: we've reached the end of the word
+    if (index == word.Length)
+    {
+        // If the current node is not the end of a word, we can't delete it
+        if (!root.IsEndOfWord)
+        {
+            return false;
+        }
+        // Otherwise, we can delete it by setting the end of word flag to false
+        root.IsEndOfWord = false;
+        // And returning true to indicate that the node can be deleted
+        return true;
+    }
+    // Recursive case: we haven't reached the end of the word yet
+    char currentChar = word[index];
+    // If the current node doesn't have a child with the current character, we can't delete it
+    if (!root.HasChild(currentChar))
+    {
+        return false;
+    }
+    // Otherwise, we can delete it if its child can be deleted
+    bool canDelete = _delete(root.Children[currentChar], word, index + 1);
+    // If the child can be deleted and the current node is not the end of a word, we can delete it
+    if (canDelete && !root.IsEndOfWord)
+    {
+        root.Children.Remove(currentChar);
+        return true;
+    }
+    // Otherwise, we can't delete it
+    return false;
+}
     public List<string> GetAllWords()
     {
         return GetAllWordsWithPrefix(root, "");
@@ -76,7 +130,7 @@ public class Trie
         _printTrieNodes(root);
     }
 
-    private void _printTrieNodes(TrieNode root, string format = " ", bool isLastChild = true) 
+    private void _printTrieNodes(TrieNode root, string format = " ", bool isLastChild = true)
     {
         if (root == null)
             return;
@@ -100,7 +154,7 @@ public class Trie
         int i = 0;
         var children = root.Children.OrderBy(x => x.Key);
 
-        foreach(var child in children)
+        foreach (var child in children)
         {
             i++;
             bool isLast = i == childCount;
@@ -113,7 +167,7 @@ public class Trie
         char firstLetter = word[0];
         List<string> suggestions = new();
         List<string> words = GetAllWordsWithPrefix(root.Children[firstLetter], firstLetter.ToString());
-        
+
         foreach (string w in words)
         {
             int distance = LevenshteinDistance(word, w);
@@ -163,4 +217,20 @@ public class Trie
 
         return d[m, n];
     }
+
+    // Search for a word in the trie
+    public bool Search(string word)
+    {
+        TrieNode current = root;
+        foreach (char c in word)
+        {
+            if (!current.HasChild(c))
+            {
+                return false;
+            }
+            current = current.Children[c];
+        }
+        return current.IsEndOfWord;
+    }
 }
+
